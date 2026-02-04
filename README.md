@@ -1,6 +1,6 @@
 # ReliefOps Mission Control
 
-ReliefOps is a solo, hackathon-ready incident response assistant built on Tambo. It turns a plain-language scenario into adaptive UI: mission briefs, resource allocations, action timelines, budget splits, and interactive checklists.
+ReliefOps is a incident response assistant built on Tambo. It turns a plain-language scenario into adaptive UI: mission briefs, resource allocations, action timelines, budget splits, and interactive checklists.
 
 ## Why this can win
 - **Impact**: a real-world coordination problem with clear stakeholders.
@@ -41,8 +41,19 @@ npx tambo init
 - "Heatwave response for a city marathon. Prioritize medical, water, and transit coordination for 25,000 attendees."
 - "Power outage at a hospital network. Create a recovery timeline, backup power allocations, and patient communication plan."
 
+## Routes
+- `/` – premium landing page
+- `/console` – mission console (main app)
+- `/docs` – how it works
+- `/pricing` – beta pricing
+- `/about` – mission + contact
+- `/security` – trust & roadmap
+
 ## Project Structure
-- `src/app/page.tsx` – landing page + live mission console.
-- `src/components/assistant/AssistantPane.tsx` – chat interface that renders Tambo components.
-- `src/components/tambo/` – adaptive UI components.
-- `src/lib/tambo.ts` – component and tool registration.
+- `src/app/page.tsx` – landing page
+- `src/app/console/page.tsx` – mission console
+- `src/components/NavBar.tsx` – global navbar
+- `src/components/Footer.tsx` – global footer
+- `src/components/assistant/AssistantPane.tsx` – chat interface that renders Tambo components
+- `src/components/tambo/` – adaptive UI components
+- `src/lib/tambo.ts` – component and tool registration
