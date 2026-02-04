@@ -7,6 +7,11 @@ export default function ConsolePage() {
   const [presetPrompt, setPresetPrompt] = React.useState<string | undefined>(undefined);
   const [submitSignal, setSubmitSignal] = React.useState(0);
   const [resetSignal, setResetSignal] = React.useState(0);
+  const [metrics, setMetrics] = React.useState({
+    activeMissions: 0,
+    assistantChunks: 0,
+    renderedComponents: 0
+  });
 
   const scenarioPool = [
     'Hospital network power outage across three sites. Stabilize critical care, allocate backup power, and coordinate patient communications for 72 hours.',
@@ -55,20 +60,22 @@ export default function ConsolePage() {
         <div className="console-status">
           <div className="signal">
             <span className="signal-dot" />
-            <span>System Ready · Awaiting scenario</span>
+            <span>
+              {metrics.activeMissions > 0 ? 'System Active · Mission live' : 'System Ready · Awaiting scenario'}
+            </span>
           </div>
           <div className="console-stats">
             <div>
-              <strong>0</strong>
+              <strong>{metrics.activeMissions}</strong>
               <span>Active missions</span>
             </div>
             <div>
-              <strong>3</strong>
-              <span>Recommended components</span>
+              <strong>{metrics.renderedComponents}</strong>
+              <span>Components rendered</span>
             </div>
             <div>
-              <strong>12m</strong>
-              <span>Avg. response setup</span>
+              <strong>{metrics.assistantChunks}</strong>
+              <span>Response steps</span>
             </div>
           </div>
         </div>
@@ -92,6 +99,7 @@ export default function ConsolePage() {
             presetPrompt={presetPrompt}
             submitSignal={submitSignal}
             resetSignal={resetSignal}
+            onMetricsChange={setMetrics}
           />
         </section>
 

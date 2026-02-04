@@ -31,9 +31,19 @@ type AssistantPaneProps = {
   presetPrompt?: string;
   submitSignal?: number;
   resetSignal?: number;
+  onMetricsChange?: (metrics: {
+    activeMissions: number;
+    assistantChunks: number;
+    renderedComponents: number;
+  }) => void;
 };
 
-export default function AssistantPane({ presetPrompt, submitSignal, resetSignal }: AssistantPaneProps) {
+export default function AssistantPane({
+  presetPrompt,
+  submitSignal,
+  resetSignal,
+  onMetricsChange
+}: AssistantPaneProps) {
   const [threadId, setThreadId] = React.useState<string | undefined>(undefined);
   const hasInitialized = React.useRef(false);
   const submitLock = React.useRef(false);
@@ -56,6 +66,15 @@ export default function AssistantPane({ presetPrompt, submitSignal, resetSignal 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [thread?.messages?.length, isPending]);
+
+  React.useEffect(() => {
+    if (!onMetricsChange) return;
+    const messages = thread?.messages ?? [];
+    const assistantChunks = messages.filter(message => message.role === 'assistant').length;
+    const renderedComponents = messages.filter(message => Boolean(message.renderedComponent)).length;
+    const activeMissions = threadId && messages.length > 0 ? 1 : 0;
+    onMetricsChange({ activeMissions, assistantChunks, renderedComponents });
+  }, [onMetricsChange, thread?.messages, threadId]);
 
   React.useEffect(() => {
     if (presetPrompt && presetPrompt !== value) {

@@ -503,6 +503,13 @@ button:hover:not(:disabled),
   font-size: 0.85rem;
 }
 
+.console-stats > div {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .console-grid {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) minmax(0, 0.7fr);
