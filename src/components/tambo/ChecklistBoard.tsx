@@ -15,11 +15,12 @@ export type ChecklistBoardProps = {
 };
 
 function ChecklistBoardBase({ title, items }: ChecklistBoardProps) {
-  const [stateItems, setStateItems] = useTamboComponentState(items ?? []);
+  const [stateItems, setStateItems] = useTamboComponentState('items', items ?? []);
 
   const toggleItem = (id: string) => {
-    setStateItems(prev =>
-      prev.map(item =>
+    if (!stateItems) return;
+    setStateItems(
+      stateItems.map(item =>
         item.id === id ? { ...item, checked: !item.checked } : item
       )
     );
@@ -50,5 +51,6 @@ function ChecklistBoardBase({ title, items }: ChecklistBoardProps) {
 }
 
 export const ChecklistBoard = withInteractable(ChecklistBoardBase, {
-  componentName: 'ChecklistBoard'
+  componentName: 'ChecklistBoard',
+  description: 'A board of checklist items that can be checked off.'
 });
