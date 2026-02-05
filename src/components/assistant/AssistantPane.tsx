@@ -44,7 +44,6 @@ export default function AssistantPane({
   resetSignal,
   onMetricsChange
 }: AssistantPaneProps) {
-  const [threadId, setThreadId] = React.useState<string | undefined>(undefined);
   const hasInitialized = React.useRef(false);
   const submitLock = React.useRef(false);
   const bottomRef = React.useRef<HTMLDivElement | null>(null);
@@ -55,13 +54,9 @@ export default function AssistantPane({
     if (hasInitialized.current) return;
     hasInitialized.current = true;
     if (typeof window === 'undefined') return;
-    const stored = window.localStorage.getItem('reliefops_thread_id');
-    if (stored) {
-      setThreadId(stored);
-    }
   }, []);
-  const { thread } = useTamboThread(threadId);
-  const { value, setValue, submit, isPending } = useTamboThreadInput(threadId);
+  const { thread } = useTamboThread();
+  const { value, setValue, submit, isPending } = useTamboThreadInput();
 
   React.useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -72,9 +67,9 @@ export default function AssistantPane({
     const messages = thread?.messages ?? [];
     const assistantChunks = messages.filter(message => message.role === 'assistant').length;
     const renderedComponents = messages.filter(message => Boolean(message.renderedComponent)).length;
-    const activeMissions = threadId && messages.length > 0 ? 1 : 0;
+    const activeMissions = messages.length > 0 ? 1 : 0;
     onMetricsChange({ activeMissions, assistantChunks, renderedComponents });
-  }, [onMetricsChange, thread?.messages, threadId]);
+  }, [onMetricsChange, thread?.messages]);
 
   React.useEffect(() => {
     if (presetPrompt && presetPrompt !== value) {
@@ -125,13 +120,7 @@ export default function AssistantPane({
     }
     submitLock.current = true;
     try {
-      const result = await submit();
-      if (result?.threadId) {
-        setThreadId(result.threadId);
-        if (typeof window !== 'undefined') {
-          window.localStorage.setItem('reliefops_thread_id', result.threadId);
-        }
-      }
+      await submit();
     } finally {
       submitLock.current = false;
     }
@@ -159,11 +148,7 @@ export default function AssistantPane({
       return;
     }
     lastResetSignal.current = resetSignal;
-    setThreadId(undefined);
     setValue('');
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('reliefops_thread_id');
-    }
   }, [resetSignal, setValue]);
 
   return (
